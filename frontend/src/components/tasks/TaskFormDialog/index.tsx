@@ -38,7 +38,7 @@ export default function TaskFormDialog({
       const payload = {
         ...data,
         assigneeId: data.assigneeId === "unassigned" ? undefined : data.assigneeId,
-        dueDate: data.dueDate || undefined,
+        dueDate: data.dueDate ? new Date(data.dueDate).toISOString() : undefined,
       };
       await onSubmit(payload);
       onOpenChange(false);

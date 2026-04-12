@@ -109,7 +109,7 @@ router.post(
 
 // PATCH /tasks/:id — update any task field
 router.patch(
-  "/:id",
+  "/tasks/:id",
   validate(updateTaskSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -144,7 +144,7 @@ router.patch(
 
 // DELETE /tasks/:id — delete (project owner or task creator only)
 router.delete(
-  "/:id",
+  "/tasks/:id",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = req.params.id as string;

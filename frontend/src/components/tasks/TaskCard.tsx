@@ -37,11 +37,7 @@ export default function TaskCard({ task, onEdit, onDelete }: Props) {
   };
 
   return (
-    <Card
-      ref={setNodeRef}
-      style={style}
-      className="group cursor-default"
-    >
+    <Card ref={setNodeRef} style={style} className="group cursor-default">
       <CardContent className="p-3 space-y-2">
         <div className="flex items-start gap-2">
           <button
@@ -80,7 +76,10 @@ export default function TaskCard({ task, onEdit, onDelete }: Props) {
         </div>
 
         <div className="flex flex-wrap items-center gap-1.5 pl-6">
-          <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${priorityColors[task.priority]}`}>
+          <Badge
+            variant="outline"
+            className={`text-[10px] px-1.5 py-0 ${priorityColors[task.priority]}`}
+          >
             {task.priority}
           </Badge>
           {task.assignee && (

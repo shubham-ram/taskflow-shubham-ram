@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { FolderOpen, ChevronLeft, ChevronRight } from "lucide-react";
+import { FolderOpen } from "lucide-react";
 import { useProjects } from "@/hooks/useProjects";
-import ProjectCard from "@/components/projects/ProjectCard";
-import CreateProjectDialog from "@/components/projects/CreateProjectDialog";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import ProjectCard from "./components/ProjectCard";
+import CreateProjectDialog from "./components/CreateProjectDialog";
+import Pagination from "./components/Pagination";
 
 export default function ProjectsPage() {
   const [page, setPage] = useState(1);
@@ -49,30 +50,11 @@ export default function ProjectsPage() {
               <ProjectCard key={p.id} project={p} />
             ))}
           </div>
-
-          {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2">
-              <Button
-                variant="outline"
-                size="icon"
-                disabled={page <= 1}
-                onClick={() => setPage((p) => p - 1)}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <span className="text-sm text-muted-foreground">
-                Page {page} of {totalPages}
-              </span>
-              <Button
-                variant="outline"
-                size="icon"
-                disabled={page >= totalPages}
-                onClick={() => setPage((p) => p + 1)}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          )}
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
         </>
       )}
     </div>

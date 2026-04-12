@@ -1,14 +1,8 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
 import api from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -16,13 +10,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
-const schema = z.object({
-  name: z.string().min(1, "Project name is required"),
-  description: z.string().optional(),
-});
-
-type FormData = z.infer<typeof schema>;
+import getField from "@/form/getField";
+import useCreateProjectForm from "./hooks/useCreateProjectForm";
+import createProjectControls from "./config/controls";
 
 interface Props {
   onCreated: () => void;
@@ -31,15 +21,9 @@ interface Props {
 export default function CreateProjectDialog({ onCreated }: Props) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { control, handleSubmit, reset, errors } = useCreateProjectForm();
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormData>({ resolver: zodResolver(schema) });
-
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: Record<string, string>) => {
     setLoading(true);
     try {
       await api.post("/projects", data);
@@ -67,21 +51,18 @@ export default function CreateProjectDialog({ onCreated }: Props) {
           <DialogTitle>Create Project</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
-            <Input id="name" placeholder="Project name" {...register("name")} />
-            {errors.name && (
-              <p className="text-sm text-destructive">{errors.name.message}</p>
-            )}
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="description">Description (optional)</Label>
-            <Textarea
-              id="description"
-              placeholder="What is this project about?"
-              {...register("description")}
-            />
-          </div>
+          {createProjectControls.map((config) => {
+            const Element = getField(config.type);
+            if (!Element) return null;
+            return (
+              <Element
+                key={config.name}
+                {...config}
+                control={control}
+                errors={errors}
+              />
+            );
+          })}
           <div className="flex justify-end gap-2">
             <Button
               type="button"

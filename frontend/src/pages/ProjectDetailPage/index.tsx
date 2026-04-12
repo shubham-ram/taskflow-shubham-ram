@@ -124,33 +124,13 @@ export default function ProjectDetailPage() {
         }}
       />
 
-      {/* Stats Summary */}
-      <div className="flex items-center gap-6 text-sm">
-        <div className="flex items-center gap-1.5">
-          <span className="font-semibold text-foreground">{taskStats.total}</span>
-          <span className="text-muted-foreground">tasks</span>
-        </div>
-        <div className="h-4 w-px bg-border/60" />
-        <div className="flex items-center gap-1.5">
-          <div className="h-2 w-2 rounded-full bg-blue-500" />
-          <span className="text-muted-foreground">{taskStats.todo} todo</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="h-2 w-2 rounded-full bg-amber-500" />
-          <span className="text-muted-foreground">{taskStats.inProgress} in progress</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="h-2 w-2 rounded-full bg-emerald-500" />
-          <span className="text-muted-foreground">{taskStats.done} done</span>
-        </div>
-      </div>
-
       <TaskFilters
         filterStatus={filterStatus}
         onFilterStatusChange={setFilterStatus}
         filterAssignee={filterAssignee}
         onFilterAssigneeChange={setFilterAssignee}
         members={members}
+        taskStats={taskStats}
       />
 
       <TaskBoard

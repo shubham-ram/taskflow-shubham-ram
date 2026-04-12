@@ -1,7 +1,9 @@
 import {
   DndContext,
   DragOverlay,
-  closestCorners,
+  useSensor,
+  useSensors,
+  PointerSensor,
   type DragEndEvent,
   type DragStartEvent,
 } from "@dnd-kit/core";
@@ -26,6 +28,14 @@ export default function TaskBoard({
   onDelete,
 }: Props) {
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5, // Requires minimum movement of 5 pixels to initiate drag, allowing clicks on buttons to work properly.
+      },
+    })
+  );
 
   const grouped = {
     todo: tasks.filter((t) => t.status === "todo"),
@@ -63,12 +73,8 @@ export default function TaskBoard({
   };
 
   return (
-    <DndContext
-      collisionDetection={closestCorners}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-    >
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-3 md:h-[calc(100vh-18rem)] mb-0">
         {COLUMNS.map((status) => (
           <TaskColumn
             key={status}
@@ -79,9 +85,12 @@ export default function TaskBoard({
           />
         ))}
       </div>
-      <DragOverlay>
+      <DragOverlay dropAnimation={{
+        duration: 200,
+        easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)',
+      }}>
         {activeTask ? (
-          <TaskCard task={activeTask} onEdit={() => {}} onDelete={() => {}} />
+          <TaskCard task={activeTask} onEdit={() => {}} onDelete={() => {}} isOverlay />
         ) : null}
       </DragOverlay>
     </DndContext>

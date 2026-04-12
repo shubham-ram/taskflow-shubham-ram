@@ -68,7 +68,7 @@ export default function TaskBoard({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
         {COLUMNS.map((status) => (
           <TaskColumn
             key={status}

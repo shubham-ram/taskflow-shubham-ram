@@ -13,13 +13,30 @@ import type { Task } from "@/types";
 import { format, isPast, isToday } from "date-fns";
 
 const priorityConfig = {
-  low: { border: "border-l-blue-500", dot: "bg-blue-500", label: "Low Priority" },
-  medium: { border: "border-l-yellow-500", dot: "bg-yellow-500", label: "Medium Priority" },
-  high: { border: "border-l-red-500", dot: "bg-red-500", label: "High Priority" },
+  low: {
+    border: "border-l-blue-500",
+    dot: "bg-blue-500",
+    label: "Low Priority",
+  },
+  medium: {
+    border: "border-l-yellow-500",
+    dot: "bg-yellow-500",
+    label: "Medium Priority",
+  },
+  high: {
+    border: "border-l-red-500",
+    dot: "bg-red-500",
+    label: "High Priority",
+  },
 };
 
 function getInitials(name: string) {
-  return name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
+  return name
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 }
 
 interface Props {
@@ -45,33 +62,51 @@ export default function TaskCard({ task, onEdit, onDelete }: Props) {
   };
 
   const config = priorityConfig[task.priority] || priorityConfig.low;
-  
+
   const dueDateObj = task.dueDate ? new Date(task.dueDate) : null;
-  const isOverdue = dueDateObj && isPast(dueDateObj) && !isToday(dueDateObj) && task.status !== "done";
+  const isOverdue =
+    dueDateObj &&
+    isPast(dueDateObj) &&
+    !isToday(dueDateObj) &&
+    task.status !== "done";
 
   return (
-    <Card 
-      ref={setNodeRef} 
-      style={style} 
-      className={`group relative overflow-hidden transition-all hover:shadow-md ${isDragging ? 'ring-2 ring-primary cursor-grabbing scale-[1.02]' : 'cursor-pointer'}`}
+    <Card
+      ref={setNodeRef}
+      style={style}
+      className={`group relative overflow-hidden transition-all hover:shadow-md py-3 ${
+        isDragging ? "ring-2 ring-primary cursor-grabbing scale-[1.02]" : ""
+      }`}
     >
-      <CardContent className="p-3">
-        <div className="flex gap-2">
+      <CardContent className="px-2.5 py-1.5">
+        <div className={`flex gap-1.5`}>
           {/* Drag Handle */}
-          <div 
-            className="mt-0.5 -ml-1 text-muted-foreground/30 hover:text-muted-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded hidden sm:block"
+          <div
+            className={`mt-0.5 -ml-1 text-muted-foreground/30 hover:text-muted-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded hidden sm:block ${
+              isDragging ? "cursor-grabbing" : "cursor-grab"
+            }`}
             {...attributes}
             {...listeners}
           >
             <GripVertical className="h-4 w-4" />
           </div>
-          
-          <div className="flex flex-1 flex-col gap-2 min-w-0" {...(window.innerWidth < 640 ? {...attributes, ...listeners} : {})}>
+
+          <div
+            className="flex flex-1 flex-col gap-1.5 min-w-0"
+            {...(window.innerWidth < 640
+              ? { ...attributes, ...listeners }
+              : {})}
+          >
             {/* Title & Actions */}
             <div className="flex items-start justify-between gap-1.5">
               <div className="flex items-start gap-1.5 min-w-0 pr-1">
-                <div className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${config.dot}`} title={config.label} />
-                <p className="font-medium text-[13px] sm:text-sm leading-snug break-words">{task.title}</p>
+                <div
+                  className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${config.dot}`}
+                  title={config.label}
+                />
+                <p className="font-medium text-[13px] sm:text-sm leading-snug break-words">
+                  {task.title}
+                </p>
               </div>
 
               {/* Actions - visible on hover */}
@@ -113,20 +148,26 @@ export default function TaskCard({ task, onEdit, onDelete }: Props) {
             )}
 
             {/* Meta Footer */}
-            <div className="flex items-center justify-between sm:pl-3.5 mt-1">
+            <div className="flex items-center justify-between sm:pl-3.5 mt-1 min-h-[20px]">
               <div className="flex items-center gap-2">
                 {dueDateObj && (
-                  <span className={`flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-sm ${
-                    isOverdue 
-                      ? "bg-destructive/10 text-destructive" 
-                      : "text-muted-foreground bg-muted/60"
-                  }`}>
-                    {isOverdue ? <Clock className="h-3 w-3" /> : <Calendar className="h-3 w-3" />}
+                  <span
+                    className={`flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-sm ${
+                      isOverdue
+                        ? "bg-destructive/10 text-destructive"
+                        : "text-muted-foreground bg-muted/60"
+                    }`}
+                  >
+                    {isOverdue ? (
+                      <Clock className="h-3 w-3" />
+                    ) : (
+                      <Calendar className="h-3 w-3" />
+                    )}
                     {format(dueDateObj, "MMM d")}
                   </span>
                 )}
               </div>
-              
+
               {task.assignee && (
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -136,7 +177,9 @@ export default function TaskCard({ task, onEdit, onDelete }: Props) {
                       </AvatarFallback>
                     </Avatar>
                   </TooltipTrigger>
-                  <TooltipContent>Assigned to {task.assignee.name}</TooltipContent>
+                  <TooltipContent>
+                    Assigned to {task.assignee.name}
+                  </TooltipContent>
                 </Tooltip>
               )}
             </div>

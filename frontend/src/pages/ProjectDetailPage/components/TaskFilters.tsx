@@ -1,4 +1,4 @@
-import { Filter, X } from "lucide-react";
+import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -18,7 +18,7 @@ interface Props {
 }
 
 const statusOptions = [
-  { value: "all", label: "All tasks" },
+  { value: "all", label: "All" },
   { value: "todo", label: "Todo" },
   { value: "in_progress", label: "In Progress" },
   { value: "done", label: "Done" },
@@ -34,36 +34,27 @@ export default function TaskFilters({
   const isFiltered = filterStatus !== "all" || filterAssignee !== "all";
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-4 bg-muted/20 p-3 rounded-xl border border-border/50 animate-fade-in-up">
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="flex items-center gap-1.5 mr-2">
-          <Filter className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm font-medium text-muted-foreground">
-            Filter by:
-          </span>
-        </div>
-
-        {/* Pill status filter */}
-        <div className="flex items-center bg-muted/50 p-1 rounded-lg">
-          {statusOptions.map((opt) => (
-            <button
-              key={opt.value}
-              onClick={() => onFilterStatusChange(opt.value)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all cursor-pointer ${
-                filterStatus === opt.value
-                  ? "bg-background text-foreground shadow-sm ring-1 ring-border"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              }`}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
+    <div className="flex flex-col sm:flex-row sm:items-center gap-3 pb-1 border-b border-border/40">
+      {/* Pill status filter */}
+      <div className="flex items-center gap-1 bg-muted/40 p-0.5 rounded-lg">
+        {statusOptions.map((opt) => (
+          <button
+            key={opt.value}
+            onClick={() => onFilterStatusChange(opt.value)}
+            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all cursor-pointer ${
+              filterStatus === opt.value
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {opt.label}
+          </button>
+        ))}
       </div>
 
-      <div className="flex items-center gap-3 sm:ml-auto">
+      <div className="flex items-center gap-2 sm:ml-auto">
         <Select value={filterAssignee} onValueChange={onFilterAssigneeChange}>
-          <SelectTrigger className="w-[160px] h-9 text-sm bg-background">
+          <SelectTrigger className="w-[150px] h-8 text-xs bg-transparent border-border/40">
             <SelectValue placeholder="Assignee" />
           </SelectTrigger>
           <SelectContent>
@@ -84,9 +75,9 @@ export default function TaskFilters({
               onFilterStatusChange("all");
               onFilterAssigneeChange("all");
             }}
-            className="h-9 px-2.5 text-muted-foreground hover:text-foreground"
+            className="h-8 px-2 text-xs text-muted-foreground hover:text-foreground"
           >
-            <X className="h-4 w-4 mr-1" />
+            <X className="h-3.5 w-3.5 mr-1" />
             Clear
           </Button>
         )}

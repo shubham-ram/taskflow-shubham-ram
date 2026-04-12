@@ -45,7 +45,7 @@ export default function TaskCard({ task, onEdit, onDelete }: Props) {
       <CardContent className="p-3 space-y-2">
         <div className="flex items-start gap-2">
           <button
-            className="mt-0.5 cursor-grab text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+            className="mt-0.5 cursor-grab text-muted-foreground sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
             {...attributes}
             {...listeners}
           >
@@ -59,7 +59,7 @@ export default function TaskCard({ task, onEdit, onDelete }: Props) {
               </p>
             )}
           </div>
-          <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="flex gap-1 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
             <Button
               variant="ghost"
               size="icon"

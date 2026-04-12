@@ -1,11 +1,22 @@
-import { ArrowLeft, Pencil, Plus, Trash2 } from "lucide-react";
+import { ChevronRight, Pencil, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import type { Project } from "@/types";
 
 interface Props {
   project: Project;
   isOwner: boolean;
-  onBack: () => void;
   onEdit: () => void;
   onDelete: () => void;
   onAddTask: () => void;
@@ -14,46 +25,80 @@ interface Props {
 export default function ProjectHeader({
   project,
   isOwner,
-  onBack,
   onEdit,
   onDelete,
   onAddTask,
 }: Props) {
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" onClick={onBack}>
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-        <div>
-          <h1 className="text-2xl font-bold">{project.name}</h1>
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between animate-fade-in-up">
+      <div className="flex flex-col gap-1.5">
+        <nav className="flex items-center gap-1 text-sm text-muted-foreground">
+          <Link
+            to="/projects"
+            className="hover:text-foreground transition-colors cursor-pointer"
+          >
+            Projects
+          </Link>
+          <ChevronRight className="h-4 w-4" />
+          <span className="font-medium text-foreground">{project.name}</span>
+        </nav>
+
+        <div className="mt-1">
+          <h1 className="text-2xl font-bold tracking-tight">{project.name}</h1>
           {project.description && (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
               {project.description}
             </p>
           )}
         </div>
       </div>
+
       <div className="flex items-center gap-2">
         {isOwner && (
           <>
             <Button variant="outline" size="sm" onClick={onEdit}>
-              <Pencil className="mr-1 h-3 w-3" />
+              <Pencil className="mr-1.5 h-3.5 w-3.5" />
               Edit
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-destructive"
-              onClick={onDelete}
-            >
-              <Trash2 className="mr-1 h-3 w-3" />
-              Delete
-            </Button>
+
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-destructive hover:bg-destructive hover:text-white"
+                >
+                  <Trash2 className="mr-1.5 h-3.5 w-3.5" />
+                  Delete
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will permanently delete the project{" "}
+                    <span className="font-semibold text-foreground">
+                      {project.name}
+                    </span>{" "}
+                    and all of its associated tasks. This action cannot be
+                    undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={onDelete}
+                    className="bg-destructive text-white hover:bg-destructive/90"
+                  >
+                    Delete Project
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </>
         )}
-        <Button size="sm" onClick={onAddTask}>
-          <Plus className="mr-1 h-4 w-4" />
+        <Button size="sm" onClick={onAddTask} className="ml-2">
+          <Plus className="mr-1.5 h-4 w-4" />
           Add Task
         </Button>
       </div>

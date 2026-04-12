@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useProject } from "@/hooks/useProjects";
@@ -28,8 +28,12 @@ export default function ProjectDetailPage() {
 
   const isOwner = project?.ownerId === user?.id;
 
-  const { handleStatusChange, handleCreateTask, handleEditTask, handleDeleteTask } =
-    useTaskActions({ projectId: id!, project, setProject });
+  const {
+    handleStatusChange,
+    handleCreateTask,
+    handleEditTask,
+    handleDeleteTask,
+  } = useTaskActions({ projectId: id!, project, setProject });
 
   const members = useMemo(() => {
     if (!project) return [];
@@ -45,7 +49,8 @@ export default function ProjectDetailPage() {
     if (!project?.tasks) return [];
     return project.tasks.filter((t) => {
       if (filterStatus !== "all" && t.status !== filterStatus) return false;
-      if (filterAssignee !== "all" && t.assigneeId !== filterAssignee) return false;
+      if (filterAssignee !== "all" && t.assigneeId !== filterAssignee)
+        return false;
       return true;
     });
   }, [project?.tasks, filterStatus, filterAssignee]);
@@ -60,6 +65,17 @@ export default function ProjectDetailPage() {
       toast.error("Failed to delete project");
     }
   };
+
+  useEffect(() => {
+    if (project) {
+      document.title = `${project.name} — TaskFlow`;
+    } else {
+      document.title = "TaskFlow — Task Management";
+    }
+    return () => {
+      document.title = "TaskFlow — Task Management";
+    };
+  }, [project]);
 
   if (loading) {
     return (
@@ -86,11 +102,10 @@ export default function ProjectDetailPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <ProjectHeader
         project={project}
         isOwner={isOwner}
-        onBack={() => navigate("/projects")}
         onEdit={() => setEditProjectOpen(true)}
         onDelete={handleDeleteProject}
         onAddTask={() => {

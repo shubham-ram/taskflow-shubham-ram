@@ -60,8 +60,8 @@ export default function TaskColumn({ status, tasks, onEdit, onDelete }: Props) {
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col rounded-xl transition-all min-h-[280px] bg-white/[0.02] dark:bg-white/[0.02] backdrop-blur-sm border border-white/[0.06] dark:border-white/[0.06] ${
-        isOver ? `ring-2 ${style.ring} bg-white/[0.04] dark:bg-white/[0.05]` : ""
+      className={`flex flex-col h-full rounded-xl transition-all min-h-[280px] bg-muted/30 dark:bg-white/[0.02] backdrop-blur-sm border border-border/50 dark:border-white/[0.06] ${
+        isOver ? `ring-2 ${style.ring} bg-muted/50 dark:bg-white/[0.05]` : ""
       }`}
     >
       {/* Column Header */}
@@ -80,7 +80,7 @@ export default function TaskColumn({ status, tasks, onEdit, onDelete }: Props) {
         items={tasks.map((t) => t.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div className="flex flex-col gap-2 px-2 pb-2 flex-1">
+        <div className="flex flex-col gap-2 px-4 pb-2 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent mt-1">
           {tasks.length === 0 ? (
             <div
               className={`flex flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-border/40 py-8 text-center flex-1 transition-opacity ${

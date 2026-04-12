@@ -1,6 +1,6 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Calendar, Pencil, Trash2, Clock } from "lucide-react";
+import { Calendar, Pencil, Trash2, Clock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -43,9 +43,10 @@ interface Props {
   task: Task;
   onEdit: (task: Task) => void;
   onDelete: (taskId: string) => void;
+  isOverlay?: boolean;
 }
 
-export default function TaskCard({ task, onEdit, onDelete }: Props) {
+export default function TaskCard({ task, onEdit, onDelete, isOverlay }: Props) {
   const {
     attributes,
     listeners,
@@ -58,7 +59,7 @@ export default function TaskCard({ task, onEdit, onDelete }: Props) {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.4 : 1,
+    opacity: isDragging && !isOverlay ? 0.3 : 1,
   };
 
   const config = priorityConfig[task.priority] || priorityConfig.low;
@@ -74,29 +75,19 @@ export default function TaskCard({ task, onEdit, onDelete }: Props) {
     <Card
       ref={setNodeRef}
       style={style}
-      className={`group relative overflow-hidden transition-all hover:shadow-md py-3 ${
-        isDragging ? "ring-2 ring-primary cursor-grabbing scale-[1.02]" : ""
+      className={`group relative shrink-0 overflow-hidden transition-all hover:shadow-md py-3 ${
+        isOverlay
+          ? "cursor-grabbing ring-2 ring-primary scale-[1.02] shadow-2xl rotate-1"
+          : isDragging
+            ? "ring-2 ring-primary/50 cursor-grabbing bg-muted/20"
+            : "cursor-grab"
       }`}
+      {...attributes}
+      {...listeners}
     >
-      <CardContent className="px-2.5 py-1.5">
+      <CardContent className="px-3.5 py-1.5">
         <div className={`flex gap-1.5`}>
-          {/* Drag Handle */}
-          <div
-            className={`mt-0.5 -ml-1 text-muted-foreground/30 hover:text-muted-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded hidden sm:block ${
-              isDragging ? "cursor-grabbing" : "cursor-grab"
-            }`}
-            {...attributes}
-            {...listeners}
-          >
-            <GripVertical className="h-4 w-4" />
-          </div>
-
-          <div
-            className="flex flex-1 flex-col gap-1.5 min-w-0"
-            {...(window.innerWidth < 640
-              ? { ...attributes, ...listeners }
-              : {})}
-          >
+          <div className="flex flex-1 flex-col gap-1.5 min-w-0">
             {/* Title & Actions */}
             <div className="flex items-start justify-between gap-1.5">
               <div className="flex items-start gap-1.5 min-w-0 pr-1">

@@ -15,14 +15,13 @@ interface Props {
   filterAssignee: string;
   onFilterAssigneeChange: (value: string) => void;
   members: User[];
+  taskStats: {
+    total: number;
+    todo: number;
+    inProgress: number;
+    done: number;
+  };
 }
-
-const statusOptions = [
-  { value: "all", label: "All" },
-  { value: "todo", label: "Todo" },
-  { value: "in_progress", label: "In Progress" },
-  { value: "done", label: "Done" },
-];
 
 export default function TaskFilters({
   filterStatus,
@@ -30,24 +29,61 @@ export default function TaskFilters({
   filterAssignee,
   onFilterAssigneeChange,
   members,
+  taskStats,
 }: Props) {
   const isFiltered = filterStatus !== "all" || filterAssignee !== "all";
 
+  const statusOptions = [
+    { value: "all", label: "All", count: taskStats.total },
+    {
+      value: "todo",
+      label: "Todo",
+      count: taskStats.todo,
+      color: "bg-blue-500",
+    },
+    {
+      value: "in_progress",
+      label: "In Progress",
+      count: taskStats.inProgress,
+      color: "bg-amber-500",
+    },
+    {
+      value: "done",
+      label: "Done",
+      count: taskStats.done,
+      color: "bg-emerald-500",
+    },
+  ];
+
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-3 pb-1 border-b border-border/40">
+    <div className="flex flex-col sm:flex-row sm:items-center gap-4 pb-2 border-b-2 border-border/40">
       {/* Pill status filter */}
-      <div className="flex items-center gap-1 bg-muted/40 p-0.5 rounded-lg">
+      <div className="flex items-center gap-1 bg-muted/40 p-1 rounded-lg">
         {statusOptions.map((opt) => (
           <button
             key={opt.value}
             onClick={() => onFilterStatusChange(opt.value)}
-            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-all cursor-pointer ${
               filterStatus === opt.value
                 ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
             }`}
           >
+            {opt.color && (
+              <div
+                className={`h-2 w-2 rounded-full ${opt.color} ${filterStatus !== opt.value && "opacity-70"}`}
+              />
+            )}
             {opt.label}
+            <span
+              className={`ml-0.5 text-[10px] px-1.5 py-0.5 rounded-full ${
+                filterStatus === opt.value
+                  ? "bg-muted text-foreground"
+                  : "bg-muted/50 text-muted-foreground"
+              }`}
+            >
+              {opt.count}
+            </span>
           </button>
         ))}
       </div>

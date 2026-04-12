@@ -47,9 +47,9 @@ export default function ProjectCard({ project }: Props) {
   const taskCount = project._count?.tasks ?? 0;
 
   return (
-    <Link to={`/projects/${project.id}`} className="group block cursor-pointer">
-      <Card className="h-full transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5 hover:border-primary/30">
-        <CardHeader className="pb-2">
+    <Link to={`/projects/${project.id}`} className="group block h-full cursor-pointer">
+      <Card className="flex h-full flex-col transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5 hover:border-primary/30">
+        <CardHeader className="flex-1 pb-4">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-2.5">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">

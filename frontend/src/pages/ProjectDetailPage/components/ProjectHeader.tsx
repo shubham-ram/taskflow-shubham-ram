@@ -1,6 +1,5 @@
-import { ChevronRight, Pencil, Plus, Trash2 } from "lucide-react";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,19 +29,8 @@ export default function ProjectHeader({
   onAddTask,
 }: Props) {
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between animate-fade-in-up">
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between animate-fade-in-up mb-10">
       <div className="flex flex-col gap-1.5">
-        <nav className="flex items-center gap-1 text-sm text-muted-foreground">
-          <Link
-            to="/projects"
-            className="hover:text-foreground transition-colors cursor-pointer"
-          >
-            Projects
-          </Link>
-          <ChevronRight className="h-4 w-4" />
-          <span className="font-medium text-foreground">{project.name}</span>
-        </nav>
-
         <div className="mt-1">
           <h1 className="text-2xl font-bold tracking-tight">{project.name}</h1>
           {project.description && (

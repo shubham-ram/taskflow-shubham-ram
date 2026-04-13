@@ -11,7 +11,7 @@ const DEFAULT_VALUES = {
   dueDate: "",
 };
 
-function useTaskForm(task?: Task | null) {
+function useTaskForm(task?: Task | null, open?: boolean) {
   const {
     control,
     handleSubmit,
@@ -34,7 +34,7 @@ function useTaskForm(task?: Task | null) {
     } else {
       reset(DEFAULT_VALUES);
     }
-  }, [task, reset]);
+  }, [task, open, reset]);
 
   return { control, handleSubmit, errors };
 }

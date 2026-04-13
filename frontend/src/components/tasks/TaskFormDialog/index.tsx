@@ -29,7 +29,7 @@ export default function TaskFormDialog({
 }: Props) {
   const [loading, setLoading] = useState(false);
   const isEditing = !!task;
-  const { control, handleSubmit, errors } = useTaskForm(task);
+  const { control, handleSubmit, errors } = useTaskForm(task, open);
   const taskControls = getTaskControls(members);
 
   const handleFormSubmit = async (data: Record<string, string>) => {
@@ -37,13 +37,18 @@ export default function TaskFormDialog({
     try {
       const payload = {
         ...data,
-        assigneeId: data.assigneeId === "unassigned" ? undefined : data.assigneeId,
-        dueDate: data.dueDate ? new Date(data.dueDate).toISOString() : undefined,
+        assigneeId:
+          data.assigneeId === "unassigned" ? undefined : data.assigneeId,
+        dueDate: data.dueDate
+          ? new Date(data.dueDate).toISOString()
+          : undefined,
       };
       await onSubmit(payload);
       onOpenChange(false);
     } catch {
-      toast.error(isEditing ? "Failed to update task" : "Failed to create task");
+      toast.error(
+        isEditing ? "Failed to update task" : "Failed to create task",
+      );
     } finally {
       setLoading(false);
     }
@@ -55,20 +60,24 @@ export default function TaskFormDialog({
         <DialogHeader>
           <DialogTitle>{isEditing ? "Edit Task" : "Create Task"}</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+
+        <form
+          onSubmit={handleSubmit(handleFormSubmit)}
+          className="grid grid-cols-1 md:grid-cols-12 gap-x-4 gap-y-6"
+        >
           {taskControls.map((config) => {
             const Element = getField(config.type);
             if (!Element) return null;
+            const { className, ...elementProps } = config;
+
             return (
-              <Element
-                key={config.name}
-                {...config}
-                control={control}
-                errors={errors}
-              />
+              <div key={config.name} className={className}>
+                <Element {...elementProps} control={control} errors={errors} />
+              </div>
             );
           })}
-          <div className="flex justify-end gap-2">
+
+          <div className="col-span-1 md:col-span-12 flex justify-end gap-2 mt-2">
             <Button
               type="button"
               variant="outline"

@@ -14,12 +14,14 @@ const getTaskControls = (members: User[]) => {
       label: "Title",
       placeholder: "Task title",
       rules: { required: "Title is required" },
+      className: "col-span-12",
     },
     {
       name: "description",
       type: "textarea",
       label: "Description (optional)",
       placeholder: "Describe the task...",
+      className: "col-span-12",
     },
     {
       name: "status",
@@ -30,6 +32,7 @@ const getTaskControls = (members: User[]) => {
         { value: "in_progress", label: "In Progress" },
         { value: "done", label: "Done" },
       ],
+      className: "col-span-12 md:col-span-6",
     },
     {
       name: "priority",
@@ -40,6 +43,7 @@ const getTaskControls = (members: User[]) => {
         { value: "medium", label: "Medium" },
         { value: "high", label: "High" },
       ],
+      className: "col-span-12 md:col-span-6",
     },
     {
       name: "assigneeId",
@@ -47,11 +51,13 @@ const getTaskControls = (members: User[]) => {
       label: "Assignee (optional)",
       placeholder: "Unassigned",
       options: memberOptions,
+      className: "col-span-12 md:col-span-6",
     },
     {
       name: "dueDate",
       type: "date",
       label: "Due date (optional)",
+      className: "col-span-12 md:col-span-6",
     },
   ];
 };

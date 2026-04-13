@@ -31,21 +31,14 @@ router.post(
       });
 
       const token = signToken({ userId: user.id, email: user.email });
-
-      res.cookie("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 24 * 60 * 60 * 1000,
-      });
-
       res.status(201).json({
+        token,
         user: { id: user.id, name: user.name, email: user.email },
       });
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 // POST /auth/login
@@ -68,26 +61,14 @@ router.post(
 
       const token = signToken({ userId: user.id, email: user.email });
 
-      res.cookie("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 24 * 60 * 60 * 1000,
-      });
-
       res.json({
+        token,
         user: { id: user.id, name: user.name, email: user.email },
       });
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
-
-// POST /auth/logout
-router.post("/logout", (_req: Request, res: Response) => {
-  res.clearCookie("token", { httpOnly: true, sameSite: "strict" });
-  res.status(204).send();
-});
 
 export default router;

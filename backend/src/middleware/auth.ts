@@ -11,14 +11,15 @@ declare global {
 }
 
 export function authenticate(req: Request, _res: Response, next: NextFunction): void {
-  const token = req.cookies?.token;
+  const header = req.headers.authorization;
 
-  if (!token) {
+  if (!header?.startsWith("Bearer ")) {
     next(new AppError(401, "unauthorized"));
     return;
   }
 
   try {
+    const token = header.slice(7);
     const payload = verifyToken(token);
     req.userId = payload.userId;
     next();

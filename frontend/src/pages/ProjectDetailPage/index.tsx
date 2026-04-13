@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { useProject } from "@/hooks/useProjects";
+import { useProject } from "@/pages/ProjectsPage/hooks/useProjects";
 import { useAuth } from "@/lib/auth";
 import api from "@/lib/api";
 import TaskBoard from "@/components/tasks/TaskBoard";

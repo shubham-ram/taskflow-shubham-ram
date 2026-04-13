@@ -10,28 +10,17 @@ import type { User, AuthResponse } from "@/types";
 
 interface AuthContextType {
   user: User | null;
-  token: string | null;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-function setSession(data: AuthResponse) {
-  localStorage.setItem("token", data.token);
-  localStorage.setItem("user", JSON.stringify(data.user));
-}
-
-function clearSession() {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
-}
-
 function loadUser(): User | null {
   try {
-    const raw = localStorage.getItem("user");
+    const raw = sessionStorage.getItem("user");
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
@@ -40,18 +29,14 @@ function loadUser(): User | null {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(loadUser);
-  const [token, setToken] = useState<string | null>(
-    () => localStorage.getItem("token")
-  );
 
   const login = useCallback(async (email: string, password: string) => {
     const { data } = await api.post<AuthResponse>("/auth/login", {
       email,
       password,
     });
-    setSession(data);
+    sessionStorage.setItem("user", JSON.stringify(data.user));
     setUser(data.user);
-    setToken(data.token);
   }, []);
 
   const register = useCallback(
@@ -61,22 +46,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email,
         password,
       });
-      setSession(data);
+      sessionStorage.setItem("user", JSON.stringify(data.user));
       setUser(data.user);
-      setToken(data.token);
     },
     []
   );
 
-  const logout = useCallback(() => {
-    clearSession();
+  const logout = useCallback(async () => {
+    await api.post("/auth/logout");
+    sessionStorage.removeItem("user");
     setUser(null);
-    setToken(null);
   }, []);
 
   return (
     <AuthContext.Provider
-      value={{ user, token, isAuthenticated: !!token, login, register, logout }}
+      value={{ user, isAuthenticated: !!user, login, register, logout }}
     >
       {children}
     </AuthContext.Provider>

@@ -1,6 +1,6 @@
 # TaskFlow
 
-A full-stack task management system where users can register, log in, create projects, add tasks, and assign them. Features a Kanban board with drag-and-drop, dark mode, and pagination.
+A full-stack task management system where users can register, log in, create projects, add tasks, and assign them. Features a Kanban board with drag-and-drop, dark mode, and paginated project listing.
 
 ## Quick Start
 
@@ -100,7 +100,7 @@ taskflow-shubham-ram/
 | GET    | /projects/:id       | Yes  | Project details + tasks                          |
 | PATCH  | /projects/:id       | Yes  | Update project (owner only)                      |
 | DELETE | /projects/:id       | Yes  | Delete project + tasks (owner only)              |
-| GET    | /projects/:id/tasks | Yes  | List tasks, filter by status/assignee, paginated |
+| GET    | /projects/:id/tasks | Yes  | List tasks, filter by status/assignee            |
 | POST   | /projects/:id/tasks | Yes  | Create task in project                           |
 | PATCH  | /tasks/:id          | Yes  | Update any task field                            |
 | DELETE | /tasks/:id          | Yes  | Delete task (creator or project owner)           |
@@ -418,7 +418,7 @@ Query params: `?status=todo|in_progress|done`, `?assignee=<uuid>`, `?page=1&limi
 
 ## Bonus Features
 
-1. **Pagination** — Both project and task list endpoints support `?page=` and `?limit=` query parameters. The frontend shows page navigation controls.
+1. **Pagination** — The project list endpoint supports `?page=` and `?limit=` query parameters with prev/next navigation controls on the frontend. The task list endpoint also supports pagination on the backend, but tasks are loaded in full alongside the project detail (single request) — paginating a Kanban board would fragment the columns and hurt usability.
 
 2. **Dark Mode** — Toggle in the navbar, powered by next-themes. Persists across sessions via localStorage. All components use CSS variables that switch between light/dark palettes.
 

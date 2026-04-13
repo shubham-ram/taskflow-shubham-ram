@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FolderOpen } from "lucide-react";
-import { useProjects } from "@/hooks/useProjects";
+import { useProjects } from "@/pages/ProjectsPage/hooks/useProjects";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import ProjectCard from "./components/ProjectCard";

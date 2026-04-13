@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import api from "@/lib/api";
-import type { Project, PaginatedResponse, Pagination } from "@/types";
+import type { Project, PaginatedResponse } from "@/types";
 
 export function useProjects(page = 1, limit = 10) {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -16,14 +16,13 @@ export function useProjects(page = 1, limit = 10) {
       const { data } = await api.get<PaginatedResponse<Project>>(
         `/projects?page=${page}&limit=${limit}`,
       );
-      const {
-        data: projects,
-        pagination,
-      }: { data: Project[]; pagination: Pagination } = data || {};
+      const projects = data?.data || [];
+      const totalPages = data?.pagination?.totalPages || 0;
+      const total = data?.pagination?.total || 0;
 
       setProjects(projects);
-      setTotalPages(pagination.totalPages);
-      setTotal(pagination.total);
+      setTotalPages(totalPages);
+      setTotal(total);
     } catch {
       setError("Failed to load projects");
     } finally {

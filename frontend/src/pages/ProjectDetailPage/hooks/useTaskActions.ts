@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { toast } from "sonner";
-import { useTasks } from "@/hooks/useTasks";
+import { useTasks } from "./useTasks";
 import type { Project, Task, TaskStatus } from "@/types";
 
 interface UseTaskActionsParams {
@@ -24,7 +24,7 @@ export function useTaskActions({
       setProject({
         ...project,
         tasks: prevTasks.map((t) =>
-          t.id === taskId ? { ...t, status: newStatus } : t
+          t.id === taskId ? { ...t, status: newStatus } : t,
         ),
       });
 
@@ -35,13 +35,13 @@ export function useTaskActions({
         toast.error("Failed to update task status");
       }
     },
-    [project, setProject, updateTask]
+    [project, setProject, updateTask],
   );
 
   const handleCreateTask = useCallback(
     async (data: Record<string, unknown>) => {
       const newTask = await createTask(
-        data as Parameters<typeof createTask>[0]
+        data as Parameters<typeof createTask>[0],
       );
       if (project) {
         setProject({
@@ -51,7 +51,7 @@ export function useTaskActions({
       }
       toast.success("Task created");
     },
-    [project, setProject, createTask]
+    [project, setProject, createTask],
   );
 
   const handleEditTask = useCallback(
@@ -59,7 +59,7 @@ export function useTaskActions({
       if (!project) return;
       const updated = await updateTask(
         editingTask.id,
-        data as Parameters<typeof updateTask>[1]
+        data as Parameters<typeof updateTask>[1],
       );
       setProject({
         ...project,
@@ -67,7 +67,7 @@ export function useTaskActions({
       });
       toast.success("Task updated");
     },
-    [project, setProject, updateTask]
+    [project, setProject, updateTask],
   );
 
   const handleDeleteTask = useCallback(
@@ -86,7 +86,7 @@ export function useTaskActions({
         toast.error("Failed to delete task");
       }
     },
-    [project, setProject, deleteTask]
+    [project, setProject, deleteTask],
   );
 
   return {
